@@ -1,11 +1,15 @@
 const { WebSocketServer } = require("ws");
+const { v4: uuidv4 } = require("uuid");
 
-const wss = new WebSocketServer({ port: 8080 });
+const wsServer = new WebSocketServer({ port: 8080 });
+const clients = [];
 
-wss.on("connection", (ws) => {
-  ws.on("message", (data) => {
-    console.log("received: %s", data);
-  });
+wsServer.on("connection", function (connection) {
+  // Generate a unique code for every user
+  const userId = uuidv4();
+  console.log(`Recieved a new connection.`);
 
-  ws.send("something");
+  // Store the new connection and handle messages
+  clients[userId] = connection;
+  console.log(`${userId} connected.`);
 });
